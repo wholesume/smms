@@ -1,0 +1,12 @@
+<ion-view view-title="Calls">
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="call in calls" href="#/smms/call/{{call.id}}">
+                <p>Added by: {{call.addedBy}}</p>
+                <p>Date: {{call.addedOn}}</p>
+                <p>Contact: {{call.contactPerson.firstname}}</p>
+                <p>Company: {{call.contactPerson.prospect.company}}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
