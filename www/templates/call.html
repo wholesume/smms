@@ -1,0 +1,19 @@
+<ion-view view-title="Call">
+    <ion-content>
+        <div ng-if="ctrlVars.showLoadingIcon" style="text-align: center;">
+            <ion-spinner></ion-spinner>
+        </div>
+        <div class="card">
+            <div class="item item-text-wrap">
+                <p>Added by: {{call.addedBy}}</p>
+                <p>Date: {{call.addedOn}}</p>
+                <p>Contact: {{call.contactPerson.firstname}}</p>
+                <p>Company: {{call.contactPerson.prospect.company}}</p>
+                <p></p>
+                <p>Comment: {{call.comment}}</p>
+                <p>Next planned call: {{call.nextPlannedCall}}</p>
+            </div>
+            <a href="tel: 110" class="button ion-ios-telephone button-balanced"> Call again (Which number?)</a>
+        </div>
+    </ion-content>
+</ion-view>
