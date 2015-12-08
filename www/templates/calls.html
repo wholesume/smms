@@ -1,5 +1,8 @@
 <ion-view view-title="Calls">
     <ion-content>
+        <div ng-if="ctrlVars.showLoadingIcon" style="text-align: center;">
+            <ion-spinner></ion-spinner>
+        </div>
         <ion-list>
             <ion-item ng-repeat="call in calls" href="#/smms/call/{{call.id}}">
                 <p>Added by: {{call.addedBy}}</p>

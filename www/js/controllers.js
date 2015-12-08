@@ -42,30 +42,34 @@ angular.module('smms.controllers', ['smms.calls.services'])
 })
 
 .controller('CallsCtrl', function ($scope, CallService) {
+    $scope.ctrlVars = {};
+    $scope.ctrlVars.showLoadingIcon = true;
     $scope.calls = [];
     CallService.getCalls().success(function (data, status, headers, config) {
 
         $scope.calls = data;
-        console.log($scope.calls);
-
+        $scope.ctrlVars.showLoadingIcon = false;
     }).error(function (data, status, headers, config) {
 
+        $scope.ctrlVars.showLoadingIcon = false;
         alert(headers);
     });
 })
 
 .controller('CallCtrl', function ($scope, $stateParams, CallService) {
-
+    $scope.ctrlVars = {};
+    $scope.ctrlVars.showLoadingIcon = true;
     $scope.call = {};
     CallService.getCall($stateParams).success(function (data, status, headers, config) {
         data.addedOn = new Date(data.addedOn).toDateString();
         data.nextPlannedCall = new Date(data.nextPlannedCall).toDateString();
         $scope.call = data;
-        console.log($scope.call);
+        $scope.ctrlVars.showLoadingIcon = false;
 
     }).error(function (data, status, headers, config) {
 
         alert(headers);
+        $scope.ctrlVars.showLoadingIcon = false;
     });
 
 });
