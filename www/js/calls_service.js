@@ -20,14 +20,18 @@ var userKey = "5267768822ee624d48fce15ec5ca79cbd602cb7f4c2157a516556991f22ef8c7b
 //});
 
 smmsCallService.factory('CallService', function ($http) {
-    var calls = [];
 
     return {
         getCalls: function () {
             return $http.get(serviceUrl + service + 'list/' + clientKey + '/' + userKey);
+        },
+
+        getCall: function ($stateParams) {
+            return $http.get(serviceUrl + service + $stateParams.itemId + '/' + clientKey + '/' + userKey);
         }
     }
 });
+
 
 //smmsCallService.factory('ListCalls', function ($resource) {
 //    return $resource(host + app + service + '/list/' + clientKey + '/' + userKey, {

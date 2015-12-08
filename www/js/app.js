@@ -40,6 +40,16 @@ angular.module('starter', ['ionic', 'smms.controllers'])
                 controller: 'CallsCtrl'
             }
         }
+    })
+
+    .state('smms.call', {
+        url: '/call/:itemId',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/call.html',
+                controller: 'CallCtrl'
+            }
+        }
     });
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/smms/calls');

@@ -52,5 +52,20 @@ angular.module('smms.controllers', ['smms.calls.services'])
 
         alert(headers);
     });
+})
+
+.controller('CallCtrl', function ($scope, $stateParams, CallService) {
+
+    $scope.call = {};
+    CallService.getCall($stateParams).success(function (data, status, headers, config) {
+        data.addedOn = new Date(data.addedOn).toDateString();
+        data.nextPlannedCall = new Date(data.nextPlannedCall).toDateString();
+        $scope.call = data;
+        console.log($scope.call);
+
+    }).error(function (data, status, headers, config) {
+
+        alert(headers);
+    });
 
 });
