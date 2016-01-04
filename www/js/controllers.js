@@ -1,6 +1,6 @@
 angular.module('smms.controllers', ['smms.calls.services'])
 
-.controller('SmmsCtrl', function ($scope, $ionicModal, $timeout) {
+.controller('SmmsCtrl', function ($scope, $ionicModal, $timeout,LoginService) {
 
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
@@ -31,8 +31,28 @@ angular.module('smms.controllers', ['smms.calls.services'])
 
     // Perform the login action when the user submits the login form
     $scope.doLogin = function () {
-        console.log('Doing login', $scope.loginData);
-
+        user = {};
+        user.username = $scope.loginData.username;
+        user.userpassword = $scope.loginData.password;
+        user.ip = "150.162.56.152";
+        LoginService.getRole(user.username).success(function (data, status, headers, config) {
+            console.log(data);
+            user.groups = [];
+            user.groups[0] = {
+                usergroup : data
+            };
+            user.oneTimePass = new Date().getTime();  
+            LoginService.getUser(user).success(function (data, status, headers, config) {
+                console.log(data);
+            }).error(function (data, status, headers, config) {
+                console.log(data);
+            });
+        }).error(function (data, status, headers, config) {
+            console.log(data);
+            console.log(headers);
+            console.log(status);
+        });
+        
         // Simulate a login delay. Remove this and replace with your login
         // code if using a login system
         //        $timeout(function () {
