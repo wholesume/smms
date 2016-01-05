@@ -1,6 +1,6 @@
 angular.module('smms.controllers', ['smms.calls.services'])
 
-.controller('SmmsCtrl', function ($scope, $ionicModal, $timeout,LoginService) {
+.controller('SmmsCtrl', function ($scope, $ionicModal, $timeout, LoginService) {
 
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
@@ -33,15 +33,15 @@ angular.module('smms.controllers', ['smms.calls.services'])
     $scope.doLogin = function () {
         user = {};
         user.username = $scope.loginData.username;
-        user.userpassword = $scope.loginData.password;
-        user.ip = "150.162.56.152";
+        var shaObj = new jsSHA("SHA-512", "TEXT");
+        shaObj.update($scope.loginData.password);
+        var hash = shaObj.getHash("HEX");
+        user.password = hash;
         LoginService.getRole(user.username).success(function (data, status, headers, config) {
             console.log(data);
-            user.groups = [];
-            user.groups[0] = {
-                usergroup : data
-            };
-            user.oneTimePass = new Date().getTime();  
+            user.groups = [{
+                usergroup: data
+            }];
             LoginService.getUser(user).success(function (data, status, headers, config) {
                 console.log(data);
             }).error(function (data, status, headers, config) {
@@ -52,7 +52,7 @@ angular.module('smms.controllers', ['smms.calls.services'])
             console.log(headers);
             console.log(status);
         });
-        
+
         // Simulate a login delay. Remove this and replace with your login
         // code if using a login system
         //        $timeout(function () {
