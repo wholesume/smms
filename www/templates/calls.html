@@ -1,15 +1,24 @@
 <ion-view view-title="Calls">
-    <ion-content>
+    <ion-content overflow-scroll=”true”>
+        <ion-list>
+            <ion-item ng-repeat="error in ctrlVars.errorList" class="item error-message">
+                {{error.message}}
+            </ion-item>
+        </ion-list>
         <div ng-if="ctrlVars.showLoadingIcon" style="text-align: center;">
             <ion-spinner></ion-spinner>
         </div>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
+        </ion-refresher>
         <ion-list>
-            <ion-item ng-repeat="call in calls" href="#/smms/call/{{call.id}}">
+            <ion-item href="#/smms/call/{{call.id}}" ng-repeat="call in shownCalls track by $index">
                 <p>Added by: {{call.addedBy}}</p>
                 <p>Date: {{call.addedOn}}</p>
                 <p>Contact: {{call.contactPerson.firstname}}</p>
                 <p>Company: {{call.contactPerson.prospect.company}}</p>
             </ion-item>
         </ion-list>
+
+        <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" on-infinite="addItems() " distance="5% "></ion-infinite-scroll>
     </ion-content>
 </ion-view>
