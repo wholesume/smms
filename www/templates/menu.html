@@ -18,8 +18,11 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item menu-close ng-click="login()">
+                <ion-item ng-show="!isLogged" menu-close ng-click="login()">
                     Login
+                </ion-item>
+                <ion-item ng-show="isLogged" menu-close ng-click="logout()">
+                    Logout
                 </ion-item>
                 <ion-item menu-close href="#/smms/calls">
                     Calls

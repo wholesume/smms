@@ -87,6 +87,10 @@ smmsService.factory('SettingsService', function () {
         localStorage[key] = value;
     }
 
+    function _removeValue(key) {
+        delete localStorage[key];
+    }
+
     return {
         getUserToken: function () {
             return _retrieveValue("userToken");
@@ -94,14 +98,21 @@ smmsService.factory('SettingsService', function () {
         setUserToken: function (value) {
             return _saveValue("userToken", value);
         },
+        removeUserToken: function () {
+            return _removeValue("userToken");
+        },
         setUsername: function (value) {
             return _saveValue("username", value);
         },
         getUsername: function (value) {
             return _retrieveValue("username");
         },
+        removeUsername: function () {
+            return _removeValue("username");
+        },
 
         get: _retrieveValue,
         set: _saveValue,
+        remove: _removeValue,
     }
 });

@@ -20,6 +20,7 @@ angular.module('smms.controllers', ['smms.services'])
 
     // Form data for the login modal
     $scope.loginData = {};
+    $scope.isLogged = false;
 
     // Create the login modal that we will use later
     $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -28,16 +29,27 @@ angular.module('smms.controllers', ['smms.services'])
         $scope.modal = modal;
         if (SettingsService.getUserToken() == null) {
             $scope.login();
-        };
+        } else {
+            $scope.isLogged = true;
+        }
     });
 
     // Triggered in the login modal to close it
     $scope.closeLogin = function () {
         $scope.modal.hide();
+        $scope.loginData = {};
     };
 
     // Open the login modal
     $scope.login = function () {
+        $scope.modal.show();
+    };
+
+    // Open the login modal
+    $scope.logout = function () {
+        SettingsService.removeUserToken();
+        SettingsService.removeUsername();
+        $scope.isLogged = false;
         $scope.modal.show();
     };
 
@@ -55,16 +67,24 @@ angular.module('smms.controllers', ['smms.services'])
             }];
             LoginService.getUser(user).success(function (data, status, headers, config) {
                 $scope.showAlert('Logged-in succesfully!');
+                $scope.isLogged = true;
                 SettingsService.setUserToken(data.password);
                 SettingsService.setUsername(data.username);
                 $scope.closeLogin();
+                $scope.$broadcast('loggedIn');
             }).error(function (data, status, headers, config) {
+                SettingsService.removeUserToken();
+                SettingsService.removeUsername();
+                $scope.isLogged = false;
                 $scope.showAlert('Error getting user');
                 console.log(data);
                 console.log(headers);
                 console.log(status);
             });
         }).error(function (data, status, headers, config) {
+            SettingsService.removeUserToken();
+            SettingsService.removeUsername();
+            $scope.isLogged = false;
             $scope.showAlert('Error getting user role');
             console.log(data);
             console.log(headers);
@@ -84,6 +104,12 @@ angular.module('smms.controllers', ['smms.services'])
             $scope.doRefresh();
         }
     });
+
+    $scope.$on('loggedIn', function () {
+        $scope.ctrlVars.showLoadingIcon = true;
+        $scope.doRefresh();
+    });
+
     $scope.calls = {};
     $scope.ctrlVars = {};
     $scope.ctrlVars.showLoadingIcon = false;
