@@ -263,3 +263,125 @@ angular.module('smms.controllers', ['smms.services'])
 
     }
 })
+
+.controller('ProspectsListCtrl', function ($scope, ProspectService) {
+
+    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        if (toState.url == "/prospects") {
+            $scope.ctrlVars.showLoadingIcon = true;
+            $scope.doRefresh();
+        }
+    });
+
+    $scope.$on('loggedIn', function () {
+        $scope.ctrlVars.showLoadingIcon = true;
+        $scope.doRefresh();
+    });
+
+    $scope.items = {};
+    $scope.ctrlVars = {};
+    $scope.ctrlVars.showLoadingIcon = false;
+    $scope.ctrlVars.errorList = [];
+
+    $scope.doRefresh = function () {
+        $scope.ctrlVars.errorList = [];
+
+        ProspectService.getProspects().success(function (data, status, headers, config) {
+            $scope.items = data;
+            $scope.ctrlVars.showLoadingIcon = false;
+            $scope.$broadcast('scroll.refreshComplete');
+            $scope.shownItems = [];
+            currentStart = 0;
+            $scope.addItems();
+        }).error(function (data, status, headers, config) {
+            $scope.shownItems = [];
+            currentStart = 0;
+            $scope.ctrlVars.errorList.push({
+                message: "It wasn't possible to retrieve the prospects"
+            });
+            $scope.ctrlVars.showLoadingIcon = false;
+            $scope.$broadcast('scroll.refreshComplete');
+            $scope.ctrlVars.showLoadingIcon = false;
+        });
+    };
+
+    $scope.shownItems = [];
+    var currentStart = 0;
+    /* Add more itens to be displayed on the page */
+    $scope.addItems = function () {
+        var i;
+        for (i = currentStart; i < currentStart + 20 && i < $scope.items.length; i++) {
+
+            $scope.shownItems.push($scope.items[i]);
+        }
+        currentStart += i;
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+    };
+    /* End addItens */
+
+    $scope.moreDataCanBeLoaded = function () {
+        return $scope.items.length > currentStart;
+    }
+
+})
+
+.controller('ContactPersonsListCtrl', function ($scope, ContactPersonService) {
+
+    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        if (toState.url == "/contactPerson") {
+            $scope.ctrlVars.showLoadingIcon = true;
+            $scope.doRefresh();
+        }
+    });
+
+    $scope.$on('loggedIn', function () {
+        $scope.ctrlVars.showLoadingIcon = true;
+        $scope.doRefresh();
+    });
+
+    $scope.items = {};
+    $scope.ctrlVars = {};
+    $scope.ctrlVars.showLoadingIcon = false;
+    $scope.ctrlVars.errorList = [];
+
+    $scope.doRefresh = function () {
+        $scope.ctrlVars.errorList = [];
+
+        ContactPersonService.getContacts().success(function (data, status, headers, config) {
+            $scope.items = data;
+            $scope.ctrlVars.showLoadingIcon = false;
+            $scope.$broadcast('scroll.refreshComplete');
+            $scope.shownItems = [];
+            currentStart = 0;
+            $scope.addItems();
+        }).error(function (data, status, headers, config) {
+            $scope.shownItems = [];
+            currentStart = 0;
+            $scope.ctrlVars.errorList.push({
+                message: "It wasn't possible to retrieve the contacts"
+            });
+            $scope.ctrlVars.showLoadingIcon = false;
+            $scope.$broadcast('scroll.refreshComplete');
+            $scope.ctrlVars.showLoadingIcon = false;
+        });
+    };
+
+    $scope.shownItems = [];
+    var currentStart = 0;
+    /* Add more itens to be displayed on the page */
+    $scope.addItems = function () {
+        var i;
+        for (i = currentStart; i < currentStart + 20 && i < $scope.items.length; i++) {
+
+            $scope.shownItems.push($scope.items[i]);
+        }
+        currentStart += i;
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+    };
+    /* End addItens */
+
+    $scope.moreDataCanBeLoaded = function () {
+        return $scope.items.length > currentStart;
+    }
+
+})

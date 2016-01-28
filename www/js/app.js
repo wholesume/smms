@@ -23,35 +23,34 @@ angular.module('starter', ['ionic', 'smms.controllers'])
 })
 
 .config(function ($stateProvider, $urlRouterProvider) {
-    $stateProvider
-
-        .state('smms', {
+    $stateProvider.state('smms', {
         url: '/smms',
         abstract: true,
         templateUrl: 'templates/menu.html',
         controller: 'SmmsCtrl'
-    })
+    });
 
-    .state('smms.calls', {
-            url: '/calls',
-            views: {
-                'menuContent': {
-                    templateUrl: 'templates/calls.html',
-                    controller: 'CallListCtrl'
-                }
+    $stateProvider.state('smms.calls', {
+        url: '/calls',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/calls.html',
+                controller: 'CallListCtrl'
             }
-        })
-        .state('smms.call/add', {
-            url: "/call/add",
-            views: {
-                'menuContent': {
-                    templateUrl: "templates/add-call.html",
-                    controller: 'CallAddCtrl'
-                }
-            }
-        })
+        }
+    });
 
-    .state('smms.call', {
+    $stateProvider.state('smms.call/add', {
+        url: "/call/add",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/add-call.html",
+                controller: 'CallAddCtrl'
+            }
+        }
+    });
+
+    $stateProvider.state('smms.call', {
         url: '/call/:itemId',
         views: {
             'menuContent': {
@@ -60,6 +59,27 @@ angular.module('starter', ['ionic', 'smms.controllers'])
             }
         }
     });
+
+    $stateProvider.state('smms.prospects', {
+        url: '/prospects',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/prospects.html',
+                controller: 'ProspectsListCtrl'
+            }
+        }
+    });
+
+    $stateProvider.state('smms.contactPerson', {
+        url: '/contactPerson',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/contact-person.html',
+                controller: 'ContactPersonsListCtrl'
+            }
+        }
+    });
+
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/smms/calls');
 });
