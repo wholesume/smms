@@ -1,0 +1,57 @@
+<ion-view view-title="Add Call">
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="error in ctrlVars.errorList" class="item error-message">
+                {{error.message}}
+            </ion-item>
+        </ion-list>
+        <div class="padding list-inset">
+            <div class="item item-input">
+                <div class="placeholder" style="float:left">
+                    Company:</div>
+                <select style="border: 0px;" class="item item-input item-select col" ng-model="call.prospect" ng-options="item.company for item in ctrlVars.prospects track by item.id">
+                </select>
+
+                <a style="float:right;margin: 10px;" class="button button-calm col" href="#/smms/prospect/add">
+                    Add
+                </a>
+            </div>
+
+            <div class="item item-input">
+                <div class="placeholder" style="float:left">
+                    Contact:</div>
+                <select style="border: 0px;" class="item item-input item-select col" ng-model="call.contactPerson" ng-options="item.firstname for item in ctrlVars.persons track by item.id">
+                </select>
+
+                <a style="float:right;margin: 10px;" class="button button-calm col" href="#/smms/contactPerson/add">
+                    Add
+                </a>
+            </div>
+            <label class="item item-input">
+                <input ng-model="call.comment" type="text" placeholder="Comment">
+            </label>
+            <ion-toggle ng-model="call.toFollowUp" toggle-class="toggle-calm">To follow up</ion-toggle>
+
+        </div>
+
+        <div class="row">
+            <div class="col col-50">
+                <button ng-show="!showBackToMenu()" class="button button-full button-energized " ng-click="$ionicGoBack()">
+                    Back
+                </button>
+
+                <button ng-show="showBackToMenu()" class="button button-full button-energized " menu-toggle="left">
+                    Back
+                </button>
+                <button ng-show="ctrlVars.showDelete" class="button button-full button-assertive " ng-click="deleteBomItem()">
+                    Delete
+                </button>
+            </div>
+            <div class="col col-50">
+                <button class="button button-full button-calm " ng-click="saveCall()">
+                    Save
+                </button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,6 @@
+{
+    "jscodehints.detectedExclusions": [
+        "/home/marlon/Documents/UH_Project/smms/plugins/cordova-plugin-device/src/tizen/DeviceProxy.js",
+        "/home/marlon/Documents/UH_Project/smms/www/js/controllers.js"
+    ]
+}

@@ -33,14 +33,23 @@ angular.module('starter', ['ionic', 'smms.controllers'])
     })
 
     .state('smms.calls', {
-        url: '/calls',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/calls.html',
-                controller: 'CallsCtrl'
+            url: '/calls',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/calls.html',
+                    controller: 'CallListCtrl'
+                }
             }
-        }
-    })
+        })
+        .state('smms.call/add', {
+            url: "/call/add",
+            views: {
+                'menuContent': {
+                    templateUrl: "templates/add-call.html",
+                    controller: 'CallAddCtrl'
+                }
+            }
+        })
 
     .state('smms.call', {
         url: '/call/:itemId',

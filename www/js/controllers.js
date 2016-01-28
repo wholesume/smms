@@ -1,4 +1,4 @@
-angular.module('smms.controllers', ['smms.calls.services'])
+angular.module('smms.controllers', ['smms.services'])
 
 .controller('SmmsCtrl', function ($scope, $ionicModal, $ionicPopup, $timeout, LoginService, SettingsService) {
 
@@ -56,6 +56,7 @@ angular.module('smms.controllers', ['smms.calls.services'])
             LoginService.getUser(user).success(function (data, status, headers, config) {
                 $scope.showAlert('Logged-in succesfully!');
                 SettingsService.setUserToken(data.password);
+                SettingsService.setUsername(data.username);
                 $scope.closeLogin();
             }).error(function (data, status, headers, config) {
                 $scope.showAlert('Error getting user');
@@ -75,7 +76,7 @@ angular.module('smms.controllers', ['smms.calls.services'])
 
 })
 
-.controller('CallsCtrl', function ($scope, CallService) {
+.controller('CallListCtrl', function ($scope, CallService) {
 
     $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
         if (toState.url == "/calls") {
@@ -130,7 +131,7 @@ angular.module('smms.controllers', ['smms.calls.services'])
 
 })
 
-.controller('CallCtrl', function ($scope, $stateParams, CallService) {
+.controller('CallCtrl', function ($scope, $stateParams, CallService, $ionicPopup) {
     $scope.ctrlVars = {};
     $scope.ctrlVars.showLoadingIcon = true;
     $scope.call = {};
@@ -146,4 +147,93 @@ angular.module('smms.controllers', ['smms.calls.services'])
         $scope.ctrlVars.showLoadingIcon = false;
     });
 
-});
+    $scope.deleteCall = function () {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Delete call',
+            template: 'Are you sure you want to delete this call?'
+        });
+
+        confirmPopup.then(function (res) {
+            if (res) {
+                CallService.deleteCall($scope.call, function () {
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Success!',
+                        template: 'The call was successfuly deleted'
+                    });
+                    alertPopup.then(function (res) {
+                        $ionicHistory.goBack();
+                    });
+                }, function () {
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Failure!',
+                        template: 'The call was not deleted'
+                    });
+                });
+            }
+        });
+
+    }
+
+})
+
+.controller('CallAddCtrl', function ($scope, ContactPersonService, ProspectService, CallService, SettingsService, $ionicHistory, $ionicPopup) {
+
+    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        if (toState.url == "/bomitem/add") {
+            $scope.loadContacts();
+            $scope.loadProspects();
+        }
+    });
+
+    $scope.loadContacts = function () {
+        ContactPersonService.getContacts().success(function (data, status, headers, config) {
+            $scope.ctrlVars.persons = data;
+        }).error(function (data, status, headers, config) {
+            $scope.ctrlVars.errorList.push({
+                message: "It wasn't possible to retrieve the contacts"
+            });
+        });
+    }
+
+    $scope.loadProspects = function () {
+        ProspectService.getProspects().success(function (data, status, headers, config) {
+            $scope.ctrlVars.prospects = data;
+        }).error(function (data, status, headers, config) {
+            $scope.ctrlVars.errorList.push({
+                message: "It wasn't possible to retrieve the prospects"
+            });
+        });
+    }
+
+    $scope.showBackToMenu = function () {
+        return !($ionicHistory.backView());
+    }
+
+    $scope.ctrlVars = {};
+    $scope.ctrlVars.showDelete = false;
+
+    $scope.loadContacts();
+    $scope.loadProspects();
+
+    $scope.call = {};
+
+    $scope.saveCall = function () {
+        $scope.call.addedOn = new Date();
+        $scope.call.addedBy = SettingsService.getUsername();
+        CallService.addCall($scope.call).success(function () {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Success!',
+                template: 'The call was successfuly added'
+            });
+            alertPopup.then(function (res) {
+                $scope.call = {};
+            });
+        }, function () {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Failure!',
+                template: 'The call was not added'
+            });
+        });
+
+    }
+})
